@@ -1,0 +1,1 @@
+# lesson response schema for validating lesson responses

@@ -1,0 +1,1 @@
+# test auth sirve para definir las pruebas unitarias y de integración relacionadas con el módulo de autenticación, como el inicio de sesión, la generación de tokens y la validación de credenciales. Estas pruebas se utilizan para asegurarse de que el módulo de autenticación funciona correctamente y cumple con los requisitos establecidos en la lógica de negocio.

@@ -1,0 +1,1 @@
+# lesson request schema for validating lesson creation requests
