@@ -311,6 +311,47 @@ def leave_course(
     return {"left": bool(removed)}
 
 
+@router.delete("/{course_id}/students/{student_id}")
+def remove_student(
+    course_id: int,
+    student_id: int,
+    db: Session = Depends(get_db),
+    caller: Caller = Depends(current_caller),
+):
+    """El docente saca a un estudiante de su curso.
+
+    Su avance y sus respuestas se conservan: si vuelve a entrar con el código
+    lo recupera. Lo que pierde es el acceso al curso mientras tanto.
+    """
+    course = load_course(db, course_id)
+    if course.is_general:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Del curso general no se saca a nadie: es de todos los estudiantes.",
+        )
+    if not (owns(course, caller) or caller.role == DIRECTOR):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Solo el docente del curso puede sacar a un estudiante.",
+        )
+
+    removed = (
+        db.query(CourseEnrollment)
+        .filter(
+            CourseEnrollment.course_id == course.id,
+            CourseEnrollment.student_id == student_id,
+        )
+        .delete(synchronize_session=False)
+    )
+    db.commit()
+    if not removed:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Ese estudiante no está en este curso.",
+        )
+    return {"removed": True}
+
+
 @router.delete("/{course_id}")
 def delete_course(
     course_id: int,

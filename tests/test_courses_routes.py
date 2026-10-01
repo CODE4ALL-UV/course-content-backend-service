@@ -232,3 +232,56 @@ def test_renaming_is_for_its_teacher():
 
     assert renamed.json()["title"] == "Python nocturno"
     assert refused.status_code == 403
+
+
+def _student() -> tuple[int, dict]:
+    user_id = next(_ids)
+    token = create_access_token(
+        data={"sub": str(user_id), "email": f"e{user_id}@example.com", "rol": "estudiante"}
+    )
+    return user_id, {"Authorization": f"Bearer {token}"}
+
+
+def test_the_teacher_removes_a_student_from_their_course():
+    teacher = _user("docente")
+    student_id, student = _student()
+    course = _create(teacher)
+    client.post("/api/courses/join", json={"code": course["join_code"]}, headers=student)
+
+    removed = client.delete(
+        f"/api/courses/{course['id']}/students/{student_id}", headers=teacher
+    )
+
+    assert removed.status_code == 200
+    seen = client.get(f"/api/courses/{course['id']}/overrides", headers=student)
+    assert seen.status_code == 403
+    # Con el código puede volver.
+    back = client.post("/api/courses/join", json={"code": course["join_code"]}, headers=student)
+    assert back.status_code == 200
+
+
+def test_only_the_teacher_of_the_course_removes_students():
+    teacher = _user("docente")
+    student_id, student = _student()
+    course = _create(teacher)
+    client.post("/api/courses/join", json={"code": course["join_code"]}, headers=student)
+
+    other = client.delete(
+        f"/api/courses/{course['id']}/students/{student_id}", headers=_user("docente")
+    )
+    itself = client.delete(
+        f"/api/courses/{course['id']}/students/{student_id}", headers=student
+    )
+
+    assert other.status_code == 403
+    assert itself.status_code == 403
+
+
+def test_removing_someone_who_is_not_there_says_so():
+    teacher = _user("docente")
+    course = _create(teacher)
+
+    response = client.delete(f"/api/courses/{course['id']}/students/999999", headers=teacher)
+
+    assert response.status_code == 404
+
