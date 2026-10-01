@@ -46,8 +46,19 @@ def test_a_student_cannot_edit_the_course():
     assert response.status_code == 403
 
 
-def test_a_teacher_edits_and_reverts_a_section():
-    headers = _auth("docente")
+def test_a_teacher_cannot_edit_the_general_course():
+    # Cada docente edita sus cursos; el de todos es de la coordinación.
+    response = client.put(
+        "/api/course/overrides/section/m1-s1",
+        json={"content": {"title": "x"}},
+        headers=_auth("docente"),
+    )
+
+    assert response.status_code == 403
+
+
+def test_the_coordination_edits_and_reverts_the_general_course():
+    headers = _auth("director")
 
     saved = client.put(
         "/api/course/overrides/section/m9-s9",

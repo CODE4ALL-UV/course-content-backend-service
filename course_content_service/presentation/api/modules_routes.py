@@ -19,6 +19,10 @@ aquí o por allí da el mismo resultado.
 Leer es público, porque el estudiante necesita ver el nombre editado. Escribir
 exige ser docente: antes no lo exigía, y cualquiera podía renombrar un módulo
 del curso sin haber iniciado sesión siquiera.
+
+Estas rutas no conocen los cursos por docente: trabajan sobre el Curso general,
+como antes, y por eso escribir aquí es solo de la coordinación. Cada docente
+renombra los módulos de su curso con `/api/courses/{id}/overrides/module/N`.
 """
 
 import json
@@ -30,7 +34,10 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from neon_storage import get_db
+from neon_storage.courses import general_course
 from neon_storage.models import CourseOverride
+
+from course_content_service.access import require_edit
 
 from user_management_service.auth import Caller, require_course_editor
 
@@ -101,6 +108,7 @@ def _find(db: Session, target_id: str) -> CourseOverride | None:
     return (
         db.query(CourseOverride)
         .filter(
+            CourseOverride.course_id == general_course(db).id,
             CourseOverride.scope == MODULE_SCOPE,
             CourseOverride.target_id == target_id,
         )
@@ -118,11 +126,13 @@ def _save(
             detail="Ese módulo lleva demasiado texto para guardarlo.",
         )
 
+    course = require_edit(general_course(db), caller)
     row = _find(db, target_id)
     now = datetime.now(timezone.utc)
 
     if row is None:
         row = CourseOverride(
+            course_id=course.id,
             scope=MODULE_SCOPE,
             target_id=target_id,
             payload=serialized,
