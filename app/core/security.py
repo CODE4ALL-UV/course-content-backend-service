@@ -1,1 +1,0 @@
-#este archivo security sirve para manejar la seguridad del proyecto, como la autenticación y autorización de usuarios

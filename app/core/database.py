@@ -1,1 +1,0 @@
-# esto sirve para crear la base de datos y las tablas necesarias para el proyecto

@@ -1,1 +1,0 @@
-# activat sirve para activar un dispositivo registrado

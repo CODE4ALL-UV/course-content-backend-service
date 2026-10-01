@@ -1,1 +1,0 @@
-# routes sirve para definir las rutas de la API, es decir, los endpoints que los clientes pueden utilizar para interactuar con la aplicación. Cada ruta se asocia con una función que maneja la lógica de negocio correspondiente, como llamar a los servicios y use cases necesarios para procesar la solicitud y generar una respuesta adecuada.

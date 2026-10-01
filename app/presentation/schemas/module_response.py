@@ -1,1 +1,0 @@
-# module response schema for validating module responses

@@ -1,1 +1,0 @@
-# lesson repository implementation

@@ -1,1 +1,0 @@
-# module request schema for validating module creation requests

@@ -1,1 +1,0 @@
-# connection sirve para manejar la conexión a la base de datos, como establecer la conexión, cerrar la conexión y ejecutar consultas SQL. También puede incluir funciones para manejar transacciones y errores relacionados con la base de datos.

@@ -1,1 +1,6 @@
-# requirements.txt sirve para listar las dependencias necesarias para ejecutar la aplicación, como las bibliotecas y frameworks utilizados en el desarrollo. Este archivo se utiliza para instalar las dependencias de manera sencilla utilizando herramientas como pip, asegurando que el entorno de desarrollo y producción tenga todas las dependencias necesarias para que la aplicación funcione correctamente.
+# Además usa neon-storage (la base) y user-management (la sesión): sus
+# dependencias están en el requirements.txt de cada uno de esos repos.
+fastapi
+uvicorn
+pydantic
+sqlalchemy

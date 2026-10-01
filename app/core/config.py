@@ -1,1 +1,0 @@
-# esto archivo config sirve para configurar la base de datos y otras cosas necesarias para el proyecto

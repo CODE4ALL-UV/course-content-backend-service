@@ -1,1 +1,0 @@
-# course request schema for validating course creation requests

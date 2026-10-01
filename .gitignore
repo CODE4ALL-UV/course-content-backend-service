@@ -1,0 +1,13 @@
+# Secretos: la cadena de conexion de Neon y la clave de firma.
+.env
+.env.*
+!.env.example
+
+# Bytecode: se regenera en cada maquina y solo provoca conflictos
+__pycache__/
+*.pyc
+
+# Entorno virtual y cache de pruebas
+.venv/
+venv/
+.pytest_cache/

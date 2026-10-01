@@ -1,1 +1,0 @@
-#este archivo main sirve para iniciar la aplicación y configurar las rutas y dependencias necesarias para el proyecto
