@@ -23,15 +23,27 @@ jobs:
         with:
           python-version: '3.14'
 
-      # 3. Instalar dependencias
+      # 3. Clonar repos hermanos requeridos por las pruebas
+      - name: Checkout sibling services
+        run: |
+          git clone https://github.com/CODE4ALL-UV/neon-storage-backend-service ../neon-storage-backend-service
+          git clone https://github.com/CODE4ALL-UV/course-content-backend-service ../course-content-backend-service
+          git clone https://github.com/CODE4ALL-UV/user-management-backend-service ../user-management-backend-service
+
+      # 4. Instalar dependencias
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install -r requirements.txt \
+            -r ../neon-storage-backend-service/requirements.txt \
+            -r ../course-content-backend-service/requirements.txt \
+            -r ../user-management-backend-service/requirements.txt
           pip install pytest pytest-cov
 
-      # 4. Ejecutar pruebas y generar el archivo coverage.xml
+      # 5. Ejecutar pruebas y generar el archivo coverage.xml
       - name: Run tests with coverage
+        env:
+            PYTHONPATH: ../neon-storage-backend-service:../course-content-backend-service:../user-management-backend-service
         run: |
           pytest tests --cov=. --cov-report=xml
 
