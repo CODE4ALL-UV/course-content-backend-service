@@ -1,0 +1,9 @@
+---
+# Configuración de Codacy.
+# Las pruebas usan assert, que es la forma normal de escribirlas en pytest.
+# Bandit lo marca como riesgo (B101), así que el panel se llenaba de falsos
+# positivos. Bandit sigue revisando todo el código de la aplicación.
+engines:
+  bandit:
+    exclude_paths:
+      - "tests/**"
